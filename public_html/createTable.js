@@ -8,16 +8,16 @@
  * Encapsulates the information for a vegetable from the NMSU CES publication.
  * @constructor
  */
-function Vegetable(){
-	this.name;
-	this.variety;
-	this.daysToHarvest;
-	this.area1PlantingDates; // later, parse these and store them as start date and end date in mySQL
-	this.area2PlantingDates;
-	this.area3PlantingDates;
-	this.plantingDepthInches;
-	this.plantSpacingInches;
-	this.rowSpacingInches;
+function Vegetable(name, variety, daysToHarvest, area1PlantingDates, area2PlantingDates, area3PlantingDates, plantingDepthInches, plantSpacingInches, rowSpacingInches){
+	this.name = name;
+	this.variety = variety;
+	this.daysToHarvest = daysToHarvest;
+	this.area1PlantingDates = area1PlantingDates; // later, parse these and store them as start date and end date in mySQL
+	this.area2PlantingDates = area2PlantingDates;
+	this.area3PlantingDates = area3PlantingDates;
+	this.plantingDepthInches = plantingDepthInches;
+	this.plantSpacingInches = plantSpacingInches;
+	this.rowSpacingInches = rowSpacingInches;
 	// ignore feet/person, amount of seed, yields for the current project
 
 }
@@ -25,22 +25,65 @@ function Vegetable(){
 function createTable(tableElement, outputElement){
 
 	// make an array to store all vegetables (varieties) (push each new vegetable)
-	// this is the parent/ancestor <tr> tag
+	vegetableList = [];
+	/* quick test
+	testVegetable = new Vegetable();
+	testVegetable.name = "carrots";
+	testVegetable.variety = "tom thumb";
+	testVegetable.daysToHarvest = "12";
+	testVegetable.area1PlantingDates = "mar 7 - jul 13";
+	testVegetable.area2PlantingDates = "mar 7 - jul 13";
+	testVegetable.area3PlantingDates = "mar 7 - jul 13";
+	testVegetable.plantingDepthInches = "12";
+	testVegetable.plantSpacingInches = "30";
+	testVegetable.rowSpacingInches = "45";
+	vegetableList.push(testVegetable);*/
+
+
 
 	// From first column, get the vegetable name and rowspan.
-	// rowspan is the number of varieties for this vegetable
-	// move across the row, populating the data into the first variety object.
+	// this is the parent/ancestor <tr> tag
 
-	// iterate through successive rows to get varieties, copy data from 1st variety for
-	// that type of vegetable
+	var rows = table.getElementsByTagName("tr");
+	//iterate through rows
+	text = [];
+	for(var r in rows){
+
+		if(rows[r].nodeType == Node.ELEMENT_NODE) {
+			//text[r] = ""
+			//text[r] =  "row " + r + " " + extractData(rows[r], text[r])+"\n";
+
+			var firstItemCols = rows[r].getElementsByTagName("td");
+			// first item has rowspan and variety information
+			var rowspan = firstItemCols[0].getAttribute("rowspan");
+
+			// rowspan is the number of varieties for this vegetable
+			// move across the row, populating the data into the first variety object.
+			var firstVegetable = new Vegetable(firstItemCols[0].innerHTML, firstItemCols[1].innerHTML, firstItemCols[2].innerHTML, firstItemCols[3].innerHTML, firstItemCols[4].innerHTML, firstItemCols[5].innerHTML, firstItemCols[6].innerHTML, firstItemCols[7].innerHTML, firstItemCols[8].innerHTML);
+			vegetableList.push(firstVegetable);
+
+			// iterate through successive rows to get varieties, copy data from 1st variety for
+			// that type of vegetable
+			for(var i = 1; i < rowspan; i++){
+				r++; // these vegetables need to be taken away from total remaining vegetables to visit
+				var currentVegetableCols = rows[r].getElementsByTagName("td");
+
+				var nextVegetable = new Vegetable(firstVegetable.name, currentVegetableCols[0].innerHTML, currentVegetableCols[1], firstVegetable.area1PlantingDates, firstVegetable.area2PlantingDates, firatVegetable.area3PlantingDates, firstVegetable.plantingDepthInches, firstVegetable.plantSpacingInches, firstVegetable.rowSpacingInches);
+			}
+		}
+
+	}
+
+
+
 
 	// repeat until no more rows (last vegetable in the table
 
 	// when done, pull data out of objects into CSV
-	var table = vegetableListToTable();
+	var table = vegetableListToTable(vegetableList);
 	var output =	document.getElementById(outputElement);
 
-	output.innerHTML = text.join("<br/>");
+	output.innerHTML = table.join("<br/>");
 
 }
 
@@ -50,10 +93,11 @@ function createTable(tableElement, outputElement){
 function vegetableListToTable( vegetableList){
 
 	table = [];
-	var item = new Vegetable();
+	//var item = new Vegetable();
 
-	for(item in vegetableList){
-		rowText = item.name +", "+ item.variety +", "+ item.daysToHarvest+", "+items.area1PlantingDates+", "+item.area2PlantingDates+", "+item.area3PlantingDates+", "+item.plantingDepthInches+", "+item.plantSpacingInches+", "+item.rowSpacingInches;
+	for(i in vegetableList){
+		item = vegetableList[i];
+		rowText = item.name +", "+ item.variety +", "+ item.daysToHarvest+", "+item.area1PlantingDates+", "+item.area2PlantingDates+", "+item.area3PlantingDates+", "+item.plantingDepthInches+", "+item.plantSpacingInches+", "+item.rowSpacingInches;
 		table.push(rowText);
 	}
 
