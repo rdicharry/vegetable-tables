@@ -24,6 +24,8 @@ function Vegetable(name, variety, daysToHarvest, area1PlantingDates, area2Planti
 
 function createTable(tableElement, outputElement){
 
+	var table = document.getElementById(tableElement);
+
 	// make an array to store all vegetables (varieties) (push each new vegetable)
 	vegetableList = [];
 	/* quick test
@@ -46,8 +48,8 @@ function createTable(tableElement, outputElement){
 
 	var rows = table.getElementsByTagName("tr");
 	//iterate through rows
-	text = [];
-	for(var r in rows){
+	var text = [];
+	for(var r=0; r < rows.length; r++){
 
 		if(rows[r].nodeType == Node.ELEMENT_NODE) {
 			//text[r] = ""
@@ -55,20 +57,25 @@ function createTable(tableElement, outputElement){
 
 			var firstItemCols = rows[r].getElementsByTagName("td");
 			// first item has rowspan and variety information
-			var rowspan = firstItemCols[0].getAttribute("rowspan");
+			var firstItem = firstItemCols[0];
+			var firstItemText = firstItem.innerHTML;
+			var rowspan = firstItem.getAttribute("rowspan");
+
 
 			// rowspan is the number of varieties for this vegetable
 			// move across the row, populating the data into the first variety object.
-			var firstVegetable = new Vegetable(firstItemCols[0].innerHTML, firstItemCols[1].innerHTML, firstItemCols[2].innerHTML, firstItemCols[3].innerHTML, firstItemCols[4].innerHTML, firstItemCols[5].innerHTML, firstItemCols[6].innerHTML, firstItemCols[7].innerHTML, firstItemCols[8].innerHTML);
+			var firstVegetable = new Vegetable(firstItemCols[0].innerHTML, firstItemCols[1].innerHTML, firstItemCols[2].innerHTML, firstItemCols[3].innerHTML.replace("<br>",""), firstItemCols[4].innerHTML.replace("<br>",""), firstItemCols[5].innerHTML.replace("<br>",""), firstItemCols[6].innerHTML, firstItemCols[7].innerHTML, firstItemCols[8].innerHTML);
 			vegetableList.push(firstVegetable);
 
 			// iterate through successive rows to get varieties, copy data from 1st variety for
 			// that type of vegetable
-			for(var i = 1; i < rowspan; i++){
+			rowspanRows = parseInt(rowspan);
+			for(var i = 1; i < rowspanRows; i++){
 				r++; // these vegetables need to be taken away from total remaining vegetables to visit
 				var currentVegetableCols = rows[r].getElementsByTagName("td");
 
-				var nextVegetable = new Vegetable(firstVegetable.name, currentVegetableCols[0].innerHTML, currentVegetableCols[1], firstVegetable.area1PlantingDates, firstVegetable.area2PlantingDates, firatVegetable.area3PlantingDates, firstVegetable.plantingDepthInches, firstVegetable.plantSpacingInches, firstVegetable.rowSpacingInches);
+				var nextVegetable = new Vegetable(firstVegetable.name, currentVegetableCols[0].innerHTML, currentVegetableCols[1].innerHTML, firstVegetable.area1PlantingDates, firstVegetable.area2PlantingDates, firstVegetable.area3PlantingDates, firstVegetable.plantingDepthInches, firstVegetable.plantSpacingInches, firstVegetable.rowSpacingInches);
+				vegetableList.push(nextVegetable);
 			}
 		}
 
