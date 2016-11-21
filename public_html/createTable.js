@@ -64,7 +64,18 @@ function createTable(tableElement, outputElement){
 
 			// rowspan is the number of varieties for this vegetable
 			// move across the row, populating the data into the first variety object.
-			var firstVegetable = new Vegetable(firstItemCols[0].innerHTML, firstItemCols[1].innerHTML, firstItemCols[2].innerHTML, firstItemCols[3].innerHTML.replace("<br>",""), firstItemCols[4].innerHTML.replace("<br>",""), firstItemCols[5].innerHTML.replace("<br>",""), firstItemCols[6].innerHTML, firstItemCols[7].innerHTML, firstItemCols[8].innerHTML);
+
+			// first, strip out breaks
+			var col3 = firstItemCols[3].innerHTML.replace("<br>","");
+			var col3 = col3.replace("<br ///>", "");
+
+			var col4 = firstItemCols[4].innerHTML.replace("<br>","");
+			var col4 = col4.replace("<br ///>", "");
+
+			var col5 = firstItemCols[5].innerHTML.replace("<br>","");
+			var col5 = col5.replace("<br ///>", "");
+
+			var firstVegetable = new Vegetable(firstItemCols[0].innerHTML, firstItemCols[1].innerHTML, firstItemCols[2].innerHTML, col3, col4, col5, firstItemCols[6].innerHTML, firstItemCols[7].innerHTML, firstItemCols[8].innerHTML);
 			vegetableList.push(firstVegetable);
 
 			// iterate through successive rows to get varieties, copy data from 1st variety for
@@ -90,6 +101,7 @@ function createTable(tableElement, outputElement){
 	var table = vegetableListToTable(vegetableList);
 	var output =	document.getElementById(outputElement);
 
+
 	output.innerHTML = table.join("<br/>");
 
 }
@@ -104,7 +116,7 @@ function vegetableListToTable( vegetableList){
 
 	for(i in vegetableList){
 		item = vegetableList[i];
-		rowText = item.name +", "+ item.variety +", "+ item.daysToHarvest+", "+item.area1PlantingDates+", "+item.area2PlantingDates+", "+item.area3PlantingDates+", "+item.plantingDepthInches+", "+item.plantSpacingInches+", "+item.rowSpacingInches;
+		rowText = "&#34"+item.name +"&#34, &#34"+ item.variety +"&#34, "+ item.daysToHarvest+", &#34"+item.area1PlantingDates+"&#34, &#34"+item.area2PlantingDates+"&#34, &#34"+item.area3PlantingDates+"&#34, "+item.plantingDepthInches+", "+item.plantSpacingInches+", "+item.rowSpacingInches;
 		table.push(rowText);
 	}
 
