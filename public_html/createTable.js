@@ -67,17 +67,18 @@ function createTable(tableElement, outputElement){
 
 			// first, strip out breaks
 			var col3 = firstItemCols[3].innerHTML.replace("<br>","");
-			var col3 = col3.replace("<br ///>", "");
+			 col3 = col3.replace("<br ///>", "");
 
 			var col4 = firstItemCols[4].innerHTML.replace("<br>","");
-			var col4 = col4.replace("<br ///>", "");
+			 col4 = col4.replace("<br ///>", "");
 
 			var col5 = firstItemCols[5].innerHTML.replace("<br>","");
-			var col5 = col5.replace("<br ///>", "");
+			 col5 = col5.replace("<br ///>", "");
 
 			var firstVegetable = new Vegetable(firstItemCols[0].innerHTML, firstItemCols[1].innerHTML, firstItemCols[2].innerHTML, col3, col4, col5, firstItemCols[6].innerHTML, firstItemCols[7].innerHTML, firstItemCols[8].innerHTML);
 			vegetableList.push(firstVegetable);
 
+			console.log(firstVegetable.name);
 			// iterate through successive rows to get varieties, copy data from 1st variety for
 			// that type of vegetable
 			rowspanRows = parseInt(rowspan);
@@ -85,7 +86,14 @@ function createTable(tableElement, outputElement){
 				r++; // these vegetables need to be taken away from total remaining vegetables to visit
 				var currentVegetableCols = rows[r].getElementsByTagName("td");
 
-				var nextVegetable = new Vegetable(firstVegetable.name, currentVegetableCols[0].innerHTML, currentVegetableCols[1].innerHTML, firstVegetable.area1PlantingDates, firstVegetable.area2PlantingDates, firstVegetable.area3PlantingDates, firstVegetable.plantingDepthInches, firstVegetable.plantSpacingInches, firstVegetable.rowSpacingInches);
+				var daysToMaturity;
+				if(currentVegetableCols[1]){
+					daysToMaturity = currentVegetableCols[1].innerHTML;
+				} else {
+					daysToMaturity = firstVegetable.daysToHarvest;
+				}
+
+				var nextVegetable = new Vegetable(firstVegetable.name, currentVegetableCols[0].innerHTML, daysToMaturity, firstVegetable.area1PlantingDates, firstVegetable.area2PlantingDates, firstVegetable.area3PlantingDates, firstVegetable.plantingDepthInches, firstVegetable.plantSpacingInches, firstVegetable.rowSpacingInches);
 				vegetableList.push(nextVegetable);
 			}
 		}
